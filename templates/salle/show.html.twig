@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}salle!{% endblock %}
+
+{% block body %}
+
+      <h1>salle</h1>
+
+         {% dump salle %}
+
+      <table class="table">
+          <tbody>
+              <tr>
+                  <th>Id</th>
+                  <td>{{ salle.id }}</td>
+              </tr>
+              <tr>
+                  <th>nom salle</th>
+                  <td>{{ salle.nomsalle }}</td>
+              </tr>
+              ...
+          </tbody>
+      </table>
+
+      <a href="{{ path('salle_list') }}">back to list</a>
+
+
+{% endblock %} {# body #}
