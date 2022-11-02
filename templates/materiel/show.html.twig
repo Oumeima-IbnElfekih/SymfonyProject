@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Materiel!{% endblock %}
+
+{% block body %}
+
+      <h1>Materiel</h1>
+
+         {% dump materiel %}
+
+      <table class="table">
+          <tbody>
+              <tr>
+                  <th>Id</th>
+                  <td>{{ materiel.id }}</td>
+              </tr>
+              <tr>
+                  <th>nom materiel</th>
+                  <td>{{ materiel.nom }}</td>
+              </tr>
+              <tr>
+                  <th>marque materiel</th>
+                  <td>{{ materiel.marque }}</td>
+              </tr>
+              ...
+          </tbody>
+      </table>
+
+      <a href="{{ path('materiel_list') }}">back to list</a>
+
+
+{% endblock %} {# body #}

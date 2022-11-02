@@ -1,0 +1,7 @@
+bootstrap_menu:
+  menus:
+    main:
+      items:
+        salles:
+          label: 'salle'
+          route: 'salle_list'

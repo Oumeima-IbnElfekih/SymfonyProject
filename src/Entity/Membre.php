@@ -89,8 +89,9 @@ class Membre
 
         return $this;
     }
-    public function __toString() {
-        return $this->nom . " (" . $this->prenom . ")";
+    public function __toString() 
+    {
+        return $this->Nom ;
     }
 
    

@@ -13,15 +13,15 @@ class SalleController extends AbstractController
 {    
     
  
-// /**
-//  * @Route("/salle", name = "salle", methods="GET")
-//  */
-// public function indexAction()
-// {
-//     return $this->render('salle/index.html.twig',
-//         [ 'welcome' => "Bonne utilisation de la todo list" ]
-//     );
-// }
+ /**
+  * @Route("/salle", name = "salle", methods="GET")
+  */
+ public function indexAction()
+ {
+     return $this->render('salle/index.html.twig',
+        [ 'welcome' => "Bienvenue SALLE" ]
+    );
+ }
 /**
  * Lists all salles.
  *
@@ -34,7 +34,7 @@ public function listAction(ManagerRegistry $doctrine): Response
 
     dump($salles);
 
-    return $this->render('salle/index.html.twig',
+    return $this->render('salle/liste.html.twig',
         [ 'salles' => $salles ]
         );
 }   
