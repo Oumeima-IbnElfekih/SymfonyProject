@@ -31,7 +31,7 @@ class Hall
 
     public function __construct()
     {
-        $this->membre = new ArrayCollection();
+        
         $this->materiels = new ArrayCollection();
     }
 
