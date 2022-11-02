@@ -24,9 +24,15 @@ class Membre
     #[ORM\OneToMany(mappedBy: 'proprietaire', targetEntity: Salle::class, orphanRemoval: true,cascade: ["persist"])]
     private Collection $salles;
 
+    #[ORM\OneToMany(mappedBy: 'membre', targetEntity: Hall::class)]
+    private Collection $halls;
+
+  
+
     public function __construct()
     {
         $this->salles = new ArrayCollection();
+        $this->halls = new ArrayCollection();
     }
 
 
@@ -93,6 +99,38 @@ class Membre
     {
         return $this->Nom ;
     }
+
+    /**
+     * @return Collection<int, Hall>
+     */
+    public function getHalls(): Collection
+    {
+        return $this->halls;
+    }
+
+    public function addHall(Hall $hall): self
+    {
+        if (!$this->halls->contains($hall)) {
+            $this->halls->add($hall);
+            $hall->setMembre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHall(Hall $hall): self
+    {
+        if ($this->halls->removeElement($hall)) {
+            // set the owning side to null (unless already changed)
+            if ($hall->getMembre() === $this) {
+                $hall->setMembre(null);
+            }
+        }
+
+        return $this;
+    }
+
+   
 
    
 }

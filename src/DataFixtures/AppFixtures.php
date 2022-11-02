@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Materiel;
+use App\Entity\Typemateriel;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -37,7 +38,15 @@ class AppFixtures extends Fixture
         yield ['altere','nike',"Romance"];
         
     }
-
+      /**
+     * Generates initialization data for materiel : [nom,description]
+     * @return \\Generator
+     */
+    private static function typematerielDataGenerator()
+    {
+        yield ['fitness','aaa'];
+        
+    }
     public function load(ObjectManager $manager): void
     {   $membreRepo = $manager->getRepository(Membre::class);
         foreach (self::membersData() as [$nom,$prenom] ) 
@@ -75,6 +84,17 @@ class AppFixtures extends Fixture
         }
     
        $manager->flush();
+       // partie le load  pour typemateriel
+       $typeMaterileRepo = $manager->getRepository(Typemateriel::class);
+        foreach (self::typematerielDataGenerator() as [$nom,$description] ) 
+        { $typemateriel= new Typemateriel();
+            $typemateriel->setNom($nom);
+            $typemateriel->setDescription($description);  
+            $manager->persist($typemateriel);     
+        }
+    
+       $manager->flush();
+
 
     }
 }

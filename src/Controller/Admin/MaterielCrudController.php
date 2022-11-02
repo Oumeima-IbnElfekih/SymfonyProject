@@ -25,7 +25,12 @@ class MaterielCrudController extends AbstractCrudController
            
             TextField::new('nom'),
             TextField::new('marque'),
-            AssociationField::new('salle')
+            AssociationField::new('salle'),
+            AssociationField::new('type') // remplacer par le nom de l'attribut spécifique, par exemple 'bodyShape'
+           // ->onlyOnDetail()
+            //->formatValue(function ($value, $entity) {
+             //   return implode(', ', $entity->getTypemateriels()->toArray()); // ici getBodyShapes()
+            //})
         ];
     }
     
