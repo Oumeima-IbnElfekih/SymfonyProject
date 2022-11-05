@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Hall;
+use App\Entity\Materiel;
 use App\Form\HallType;
 use App\Repository\HallRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 #[Route('/hall')]
 class HallController extends AbstractController
@@ -72,7 +74,34 @@ class HallController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$hall->getId(), $request->request->get('_token'))) {
             $hallRepository->remove($hall, true);
         }
+        $this->addFlash('message', 'Hall suprime');
 
         return $this->redirectToRoute('app_hall_index', [], Response::HTTP_SEE_OTHER);
     }
+
+#[Route('/{hall_id}/materiel/{materiel_id}', name: 'app_hall_materiel_show', methods: ['GET'])]
+#[ParamConverter(
+    'hall',
+    class: Hall::class,
+    options: ['id' => 'hall_id'],
+)]
+#[ParamConverter(
+    'materiel',
+    class: Materiel::class,
+    options: ['id' => 'materiel_id'],
+)]
+public function materielShow(Hall $hall, Materiel $materiel): Response
+{
+    if(! $hall->getMateriels()->contains($materiel)) {
+        throw $this->createNotFoundException("Couldn't find such a materiel in this hall !");
+    }
+
+    if(! $hall->isPublie()) {
+        throw $this->createAccessDeniedException("You cannot access the requested ressource!");
+    }
+    return $this->render('hall/materiel_show.html.twig', [
+        'materiel' => $materiel,
+        'hall' => $hall
+    ]);
+}
 }

@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Membre{% endblock %}
+
+{% block body %}
+    <h1>Membre</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ membre.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ membre.Nom }}</td>
+            </tr>
+            <tr>
+                <th>Prenom</th>
+                <td>{{ membre.prenom }}</td>
+            </tr>
+             <tr>
+                <th>salle</th>
+                <td>{% for salle in membre.salles %}
+  <li><a href="{{ path('app_salle_show', {'id' : salle.id}) }}">{{ salle }}</a></li>
+{% endfor %}
+</td>
+
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_membre_index') }}">back to list</a>
+
+    <a href="{{ path('app_membre_edit', {'id': membre.id}) }}">edit</a>
+<a href="{{ path('app_salle_new', {'membre_id': membre.id}) }}">add new salle</a>
+
+    {{ include('membre/_delete_form.html.twig') }}
+{% endblock %}

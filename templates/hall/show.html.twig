@@ -19,6 +19,16 @@
                 <th>Publie</th>
                 <td>{{ hall.publie ? 'Yes' : 'No' }}</td>
             </tr>
+             <tr>
+                <th>Materiels</th>
+                <td><ul>
+               {% for materiel in hall.materiels %}
+   <li>
+     <a href="{{ path('app_hall_materiel_show', {'hall_id': hall.id, 'materiel_id' : materiel.id}) }}">{{ materiel }}</a>
+   </li>
+   {% endfor %}
+</ul></td>
+            </tr>
         </tbody>
     </table>
 
@@ -27,4 +37,6 @@
     <a href="{{ path('app_hall_edit', {'id': hall.id}) }}">edit</a>
 
     {{ include('hall/_delete_form.html.twig') }}
+
+
 {% endblock %}

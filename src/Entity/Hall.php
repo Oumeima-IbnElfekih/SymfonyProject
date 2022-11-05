@@ -66,7 +66,9 @@ class Hall
 
  
 
-
+    public function __toString() {
+        return $this->description;
+    }
 
     /**
      * @return Collection<int, Materiel>

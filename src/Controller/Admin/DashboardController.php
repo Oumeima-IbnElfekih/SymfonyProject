@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Hall;
 use App\Entity\Salle;
 use App\Entity\Membre;
 use App\Entity\Materiel;
@@ -39,6 +40,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Membre', 'fas fa-list', Membre::class);
         yield MenuItem::linkToCrud('Materiel', 'fas fa-list', Materiel::class);
         yield MenuItem::linkToCrud('Typemateriel', 'fas fa-list', Typemateriel::class);
+        yield MenuItem::linkToCrud('gestionHall', 'fas fa-list', Hall::class);
 
         
         

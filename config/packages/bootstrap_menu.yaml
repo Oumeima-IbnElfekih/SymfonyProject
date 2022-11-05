@@ -2,6 +2,15 @@ bootstrap_menu:
   menus:
     main:
       items:
-        salles:
-          label: 'salle'
-          route: 'salle_list'
+        account:
+          label: 'Menu'
+          items:
+            Salle:
+              label: 'Gestion Salles'
+              route: 'app_salle_index'
+            Materiel:
+              label: 'Gestion Materiels'
+              route: 'app_materiel_index'
+            Hall:
+              label: 'Gestion Halls'
+              route: 'app_hall_index'

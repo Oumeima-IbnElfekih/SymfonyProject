@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Materielofhall{% endblock %}
+
+{% block main %}
+    <h1>Materiel du hall</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ hall.id }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ hall.description }}</td>
+            </tr>
+            <tr>
+                <th>Publie</th>
+                <td>{{ hall.publie ? 'Yes' : 'No' }}</td>
+            </tr>
+             
+                
+                
+           
+        </tbody>
+    </table>
+     <h1>Materiel</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ materiel.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ materiel.nom }}</td>
+            </tr>
+            <tr>
+                <th>Marque</th>
+                <td>{{ materiel.marque }}</td>
+            </tr>
+            <tr>
+                <th>Type materiel</th>
+                <td>{{ materiel.type|join(', ') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+ <a href="{{ path('app_hall_show', { 'id': hall.id}) }}">back to Hall</a>
+
+
+{% endblock %}

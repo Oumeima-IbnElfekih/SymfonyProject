@@ -1,60 +1,78 @@
 <?php
 
 namespace App\Controller;
+
 use App\Entity\Materiel;
+use App\Form\MaterielType;
+use App\Repository\MaterielRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\Persistence\ManagerRegistry;
+
+#[Route('/materiel')]
 class MaterielController extends AbstractController
 {
-    #[Route('/materiel', name: 'materiel')]
-    public function index(): Response
+    #[Route('/', name: 'app_materiel_index', methods: ['GET'])]
+    public function index(MaterielRepository $materielRepository): Response
     {
         return $this->render('materiel/index.html.twig', [
-            'welcome' => "Bienvenue Materiel",
+            'materiels' => $materielRepository->findAll(),
         ]);
     }
-    /**
- * Lists all salles.
- *
- * @Route("/listmateriel", name = "materiel_list", methods="GET")
- */
-public function listAction(ManagerRegistry $doctrine): Response
-{
-    $entityManager= $doctrine->getManager();
-    $materiels = $entityManager->getRepository(Materiel::class)->findAll();
 
-    dump($materiels);
+    #[Route('/new', name: 'app_materiel_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, MaterielRepository $materielRepository): Response
+    {
+        $materiel = new Materiel();
+        $form = $this->createForm(MaterielType::class, $materiel);
+        $form->handleRequest($request);
 
-    return $this->render('materiel/liste.html.twig',
-        [ 'materiels' => $materiels ]
-        );
-} 
-/**
- * Finds and displays a salle entity.
- *
- * @Route("/{id}", name="showm", requirements={ "id": "\d+"}, methods="GET")
- */
-public function showAction(Materiel $materiel): Response
-{
-    return $this->render('materiel/show.html.twig',
-    [ 'materiel' => $materiel ]
-    );
-} 
-#[Route('/materiel/{id}', name: 'materiel_show')]
-    public function show(ManagerRegistry $doctrine, $id)
-{
-    $materielRepository = $doctrine->getRepository(Materiel::class);
-$materiel = $materielRepository->find($id);
-if (!$materiel) {
-    throw $this->createNotFoundException(
-        'Aucune materiel pour l\'id: ' . $id
-    );
-}
-$res="";
-$nom=$materiel->getNom();
-$res.='<p>   <a href="'.$this->generateUrl('materiel_list').'">Back <a/></p>';
-return new Response('<html><body>'.$res.$nom.'</body></html>');
-}  
+        if ($form->isSubmitted() && $form->isValid()) {
+            $materielRepository->save($materiel, true);
+            $this->addFlash('message', 'materiel ajouté');
+            return $this->redirectToRoute('app_materiel_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('materiel/new.html.twig', [
+            'materiel' => $materiel,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/{id}', name: 'app_materiel_show', methods: ['GET'])]
+    public function show(Materiel $materiel): Response
+    {
+        return $this->render('materiel/show.html.twig', [
+            'materiel' => $materiel,
+        ]);
+    }
+
+    #[Route('/{id}/edit', name: 'app_materiel_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Materiel $materiel, MaterielRepository $materielRepository): Response
+    {
+        $form = $this->createForm(MaterielType::class, $materiel);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $materielRepository->save($materiel, true);
+            $this->addFlash('message', 'materiel modifie');
+            return $this->redirectToRoute('app_materiel_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('materiel/edit.html.twig', [
+            'materiel' => $materiel,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/{id}', name: 'app_materiel_delete', methods: ['POST'])]
+    public function delete(Request $request, Materiel $materiel, MaterielRepository $materielRepository): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$materiel->getId(), $request->request->get('_token'))) {
+            $materielRepository->remove($materiel, true);
+        }
+        $this->addFlash('message', 'materiel suprime');
+        return $this->redirectToRoute('app_materiel_index', [], Response::HTTP_SEE_OTHER);
+    }
 }
