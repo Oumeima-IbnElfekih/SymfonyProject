@@ -24,7 +24,9 @@
                 <td>{{ materiel.type|join(', ') }}</td>
                 <td>
                     <a href="{{ path('app_materiel_show', {'id': materiel.id}) }}">show</a>
-                    <a href="{{ path('app_materiel_edit', {'id': materiel.id}) }}">edit</a>
+                    {% if is_granted('ROLE_USER') %}
+                       <a href="{{ path('app_materiel_edit', {'id': materiel.id}) }}">edit</a>
+                       {% endif %}
                 </td>
             </tr>
         {% else %}

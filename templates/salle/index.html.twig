@@ -20,7 +20,9 @@
                 <td>{{ salle.nomsalle }}</td>
                 <td>
                     <a href="{{ path('app_salle_show', {'id': salle.id}) }}">show</a>
+                     {% if is_granted('ROLE_USER') %}
                     <a href="{{ path('app_salle_edit', {'id': salle.id}) }}">edit</a>
+                    {% endif %}
                 </td>
             </tr>
         {% else %}
@@ -46,5 +48,5 @@
     {% endfor %}
   {% endfor %}
 {% endblock %} {# alerts #}
-    <a href="{{ path('app_salle_new') }}">Create new</a>
+    
 {% endblock %}

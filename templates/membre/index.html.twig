@@ -22,7 +22,9 @@
                 <td>{{ membre.prenom }}</td>
                 <td>
                     <a href="{{ path('app_membre_show', {'id': membre.id}) }}">show</a>
+                     {% if is_granted('ROLE_USER') %}
                     <a href="{{ path('app_membre_edit', {'id': membre.id}) }}">edit</a>
+                    {% endif %}
                 </td>
             </tr>
         {% else %}

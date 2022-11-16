@@ -21,11 +21,17 @@
             <a class="navbar-brand" href="{{ path('app_membre_index') }}">Membre</a>
            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                 {{ render_bootstrap_menu('main') }}
-              </ul>
-           </div>
+     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+               {{ render_bootstrap_menu('main') }}
+          {% if app.user %}
+               {{ render_bootstrap_menu('account') }}
+          {% else %}
+               {{ render_bootstrap_menu('anonymousaccount') }}
+          {% endif %}
+     </ul>
+</div>
          </div>
+        
       </nav>
     {% endblock %}{# menu #}
         {% block body %}   

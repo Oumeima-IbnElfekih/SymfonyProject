@@ -9,7 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+#[IsGranted('IS_AUTHENTICATED_FULLY')]
 #[Route('/materiel')]
 class MaterielController extends AbstractController
 {
@@ -47,7 +48,7 @@ class MaterielController extends AbstractController
             'materiel' => $materiel,
         ]);
     }
-
+    #[IsGranted('ROLE_USER')]
     #[Route('/{id}/edit', name: 'app_materiel_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Materiel $materiel, MaterielRepository $materielRepository): Response
     {
@@ -65,7 +66,7 @@ class MaterielController extends AbstractController
             'form' => $form,
         ]);
     }
-
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'app_materiel_delete', methods: ['POST'])]
     public function delete(Request $request, Materiel $materiel, MaterielRepository $materielRepository): Response
     {

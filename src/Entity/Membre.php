@@ -27,6 +27,10 @@ class Membre
     #[ORM\OneToMany(mappedBy: 'membre', targetEntity: Hall::class)]
     private Collection $halls;
 
+    #[ORM\OneToOne(inversedBy: 'membre', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $User = null;
+
   
 
     public function __construct()
@@ -126,6 +130,18 @@ class Membre
                 $hall->setMembre(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->User;
+    }
+
+    public function setUser(User $User): self
+    {
+        $this->User = $User;
 
         return $this;
     }

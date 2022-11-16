@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 #[Route('/hall')]
 class HallController extends AbstractController
 {
@@ -49,7 +49,7 @@ class HallController extends AbstractController
             'hall' => $hall,
         ]);
     }
-
+    #[IsGranted('ROLE_USER')]
     #[Route('/{id}/edit', name: 'app_hall_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Hall $hall, HallRepository $hallRepository): Response
     {
@@ -67,7 +67,7 @@ class HallController extends AbstractController
             'form' => $form,
         ]);
     }
-
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'app_hall_delete', methods: ['POST'])]
     public function delete(Request $request, Hall $hall, HallRepository $hallRepository): Response
     {

@@ -22,7 +22,10 @@
                 <td>{{ hall.publie ? 'Yes' : 'No' }}</td>
                 <td>
                     <a href="{{ path('app_hall_show', {'id': hall.id}) }}">show</a>
+                     {% if is_granted('ROLE_USER') %}
+
                     <a href="{{ path('app_hall_edit', {'id': hall.id}) }}">edit</a>
+                    {% endif %}
                 </td>
             </tr>
         {% else %}

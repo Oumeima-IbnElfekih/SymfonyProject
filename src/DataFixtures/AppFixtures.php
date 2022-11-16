@@ -6,17 +6,20 @@ use App\Entity\Materiel;
 use App\Entity\Typemateriel;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-
+use App\Entity\User;
 use App\Entity\Membre;
 use App\Entity\Salle;
-
-class AppFixtures extends Fixture
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+class AppFixtures extends Fixture implements DependentFixtureInterface
 {
+
     private function membersData()
     {
         // todo = [title, completed];
-        yield ['Guermazi','Mohamed'];
-       
+        yield ['Guermazi','Mohamed','med@g.com'];
+        yield ['chris','chris','chris@localhost'];
+        yield ['anna','anna','anna@localhost'];
+        
         
     }
     /**
@@ -49,12 +52,18 @@ class AppFixtures extends Fixture
     }
     public function load(ObjectManager $manager): void
     {   $membreRepo = $manager->getRepository(Membre::class);
-        foreach (self::membersData() as [$nom,$prenom] ) 
+        foreach (self::membersData() as [$name,$prenom,$useremail] ) 
         {
-            $membre = new Membre();
-            $membre->setNom($nom);
-            $membre->setPrenom($prenom);
-            $manager->persist($membre);          
+            $member = new Membre();
+            if ($useremail) {
+                $user = $manager->getRepository(User::class)->findOneByEmail($useremail);
+                dump($user);
+                $member->setUser($user);
+
+            }
+            $member->setNom($name);
+            $member->setPrenom($prenom);
+            $manager->persist($member);        
         }
         $manager->flush();
         // partie le load  pour Salle
@@ -97,4 +106,12 @@ class AppFixtures extends Fixture
 
 
     }
+    public function getDependencies()
+    {
+        return [
+            UserFixtures::class,
+        ];
+    }
+
+
 }

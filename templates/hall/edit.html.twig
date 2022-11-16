@@ -8,6 +8,7 @@
     {{ include('hall/_form.html.twig', {'button_label': 'Update'}) }}
 
     <a href="{{ path('app_hall_index') }}">back to list</a>
-
+    {% if is_granted('ROLE_ADMIN') %}
     {{ include('hall/_delete_form.html.twig') }}
+    {% endif %}
 {% endblock %}
