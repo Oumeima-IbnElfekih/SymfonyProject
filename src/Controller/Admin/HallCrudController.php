@@ -25,7 +25,8 @@ class HallCrudController extends AbstractCrudController
         AssociationField::new('membre'),
         BooleanField::new('publie')
         ->onlyOnForms()
-        ->hideWhenCreating(),
+       // ->hideWhenCreating()
+       ,
         TextField::new('description'),
 
         AssociationField::new('materiels')

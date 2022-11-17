@@ -16,9 +16,15 @@ class MaterielController extends AbstractController
 {
     #[Route('/', name: 'app_materiel_index', methods: ['GET'])]
     public function index(MaterielRepository $materielRepository): Response
-    {
+    {    if ($this->isGranted('ROLE_ADMIN')) {
+        $materiels =$materielRepository->findAll();
+    }
+    else {
+        $member = $this->getUser()->membre;
+        $materiels =$materielRepository->findMemberMateriels($member);
+    }
         return $this->render('materiel/index.html.twig', [
-            'materiels' => $materielRepository->findAll(),
+            'materiels' => $materiels,
         ]);
     }
 
@@ -43,7 +49,11 @@ class MaterielController extends AbstractController
 
     #[Route('/{id}', name: 'app_materiel_show', methods: ['GET'])]
     public function show(Materiel $materiel): Response
-    {
+    { $membreUser =$this->getUser();
+        $hasAccess = $this->isGranted('ROLE_ADMIN') || ($membreUser== $materiel->getSalle()->getProprietaire()->getUser());
+        if(! $hasAccess) {
+            throw $this->createAccessDeniedException("You cannot access another member's materiel!");
+                    }
         return $this->render('materiel/show.html.twig', [
             'materiel' => $materiel,
         ]);
@@ -51,7 +61,11 @@ class MaterielController extends AbstractController
     #[IsGranted('ROLE_USER')]
     #[Route('/{id}/edit', name: 'app_materiel_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Materiel $materiel, MaterielRepository $materielRepository): Response
-    {
+    {$membreUser =$this->getUser();
+        $hasAccess = $this->isGranted('ROLE_ADMIN') || ($membreUser== $materiel->getSalle()->getProprietaire()->getUser());
+        if(! $hasAccess) {
+            throw $this->createAccessDeniedException("You cannot access another member's materiel!");
+                    }
         $form = $this->createForm(MaterielType::class, $materiel);
         $form->handleRequest($request);
 
@@ -69,7 +83,11 @@ class MaterielController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'app_materiel_delete', methods: ['POST'])]
     public function delete(Request $request, Materiel $materiel, MaterielRepository $materielRepository): Response
-    {
+    {$membreUser =$this->getUser();
+        $hasAccess = $this->isGranted('ROLE_ADMIN') || ($membreUser== $materiel->getSalle()->getProprietaire()->getUser());
+        if(! $hasAccess) {
+            throw $this->createAccessDeniedException("You cannot access another member's materiel!");
+                    }
         if ($this->isCsrfTokenValid('delete'.$materiel->getId(), $request->request->get('_token'))) {
             $materielRepository->remove($materiel, true);
         }

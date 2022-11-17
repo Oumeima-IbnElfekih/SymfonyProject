@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Hall;
+use App\Entity\Materiel;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -38,7 +39,20 @@ class HallRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
+    /**
+ * @return Hall[] Returns an array of Hall objects 
+ 
+ */
+ public function findMaterielHalls(Materiel $materiel): array
+ {
+     return $this->createQueryBuilder('g')
+     ->leftJoin('g.materiels', 'o')
+     ->andWhere('o = :materiel')
+     ->setParameter('materiel', $materiel)
+     ->getQuery()
+     ->getResult()
+     ;
+ }
 //    /**
 //     * @return Hall[] Returns an array of Hall objects
 //     */

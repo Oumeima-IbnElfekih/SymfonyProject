@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\Entity\Hall;
 use App\Entity\Materiel;
+use App\Entity\Membre;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -32,13 +34,40 @@ class MaterielRepository extends ServiceEntityRepository
 
     public function remove(Materiel $entity, bool $flush = false): void
     {
-        $this->getEntityManager()->remove($entity);
+       
+        $hallRepository = $this->getEntityManager()->getRepository(Hall::class);
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
+    // get rid of the ManyToMany relation with [galeries]
+    $halls = $hallRepository->findMaterielHalls($entity);   
+    foreach($halls as $hall) {
+        $hall->removeMateriel($entity);
+        $this->getEntityManager()->persist($hall);
+    }
+    if ($flush) {
+          $this->getEntityManager()->flush();
     }
 
+
+
+    
+
+
+
+
+    }
+        /**
+ * @return Materiel[] Returns an array of Materiel objects
+ */
+ public function findMemberMateriels(Membre $member): array
+ {
+     return $this->createQueryBuilder('o')
+          ->leftJoin('o.salle', 'i')
+          ->andWhere('i.proprietaire = :member')
+          ->setParameter('member', $member)
+          ->getQuery()
+          ->getResult()
+      ;
+ }
 //    /**
 //     * @return Materiel[] Returns an array of Materiel objects
 //     */

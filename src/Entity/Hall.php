@@ -90,7 +90,7 @@ class Hall
     public function removeMateriel(Materiel $materiel): self
     {
         $this->materiels->removeElement($materiel);
-
+        var_dump($this->materiels->removeElement($materiel));
         return $this;
     }
 

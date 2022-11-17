@@ -32,11 +32,28 @@ class TypematerielRepository extends ServiceEntityRepository
 
     public function remove(Typemateriel $entity, bool $flush = false): void
     {
-        $this->getEntityManager()->remove($entity);
+        // $this->getEntityManager()->remove($entity);
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
+        // if ($flush) {
+        //     $this->getEntityManager()->flush();
+        // }
+
+
+        // get rid of the ManyToMany relation with the [Category1] and [objet]
+$typesmateriels= $entity->getTypemateriels();
+foreach($typesmateriels as $typesmateriel) {
+    $entity->removeTypemateriel($typesmateriel);
+    $this->getEntityManager()->persist($typesmateriel);
+}
+//...
+
+$this->getEntityManager()->remove($entity);
+
+if ($flush) {
+    $this->getEntityManager()->flush();
+}
+
+        
     }
 
 //    /**

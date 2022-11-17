@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Materiel;
 use App\Entity\Salle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -30,15 +31,30 @@ class SalleRepository extends ServiceEntityRepository
         }
     }
 
+    // public function remove(Salle $entity, bool $flush = false): void
+    // {
+    //     $this->getEntityManager()->remove($entity);
+
+    //     if ($flush) {
+    //         $this->getEntityManager()->flush();
+    //     }
+    // }
+    
     public function remove(Salle $entity, bool $flush = false): void
     {
+        $materielRepository = $this->getEntityManager()->getRepository(Materiel::class);
+    
+        // clean the [objets] properly
+        $materiels = $entity->getMateriels();
+        foreach($materiels as $materiel) {
+            $materielRepository->remove($materiel, $flush);
+        }
         $this->getEntityManager()->remove($entity);
-
+    
         if ($flush) {
             $this->getEntityManager()->flush();
         }
     }
-
 //    /**
 //     * @return Salle[] Returns an array of Salle objects
 //     */

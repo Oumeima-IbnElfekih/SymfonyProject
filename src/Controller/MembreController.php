@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Membre;
+use App\Entity\User;
 use App\Form\MembreType;
 use App\Repository\MembreRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -43,7 +44,12 @@ class MembreController extends AbstractController
 
     #[Route('/{id}', name: 'app_membre_show', methods: ['GET'])]
     public function show(Membre $membre): Response
-    {
+    {  
+        $membreUser =$this->getUser();
+        $hasAccess = $this->isGranted('ROLE_ADMIN') || ($membreUser== $membre->getUser());
+        if(! $hasAccess) {
+            throw $this->createAccessDeniedException("You cannot access another member!");
+                    }
         return $this->render('membre/show.html.twig', [
             'membre' => $membre,
         ]);
@@ -51,7 +57,11 @@ class MembreController extends AbstractController
     #[IsGranted('ROLE_USER')]
     #[Route('/{id}/edit', name: 'app_membre_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Membre $membre, MembreRepository $membreRepository): Response
-    {
+    {  $membreUser =$this->getUser();
+        $hasAccess = $this->isGranted('ROLE_ADMIN') || ($membreUser== $membre->getUser());
+        if(! $hasAccess) {
+            throw $this->createAccessDeniedException("You cannot access another member!");
+                    }
         $form = $this->createForm(MembreType::class, $membre);
         $form->handleRequest($request);
 
@@ -69,7 +79,11 @@ class MembreController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'app_membre_delete', methods: ['POST'])]
     public function delete(Request $request, Membre $membre, MembreRepository $membreRepository): Response
-    {
+    {  $membreUser =$this->getUser();
+        $hasAccess = $this->isGranted('ROLE_ADMIN') || ($membreUser== $membre->getUser());
+        if(! $hasAccess) {
+            throw $this->createAccessDeniedException("You cannot access another member!");
+                    }
         if ($this->isCsrfTokenValid('delete'.$membre->getId(), $request->request->get('_token'))) {
             $membreRepository->remove($membre, true);
         }

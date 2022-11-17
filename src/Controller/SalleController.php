@@ -19,8 +19,15 @@ class SalleController extends AbstractController
     #[Route('/', name: 'app_salle_index', methods: ['GET'])]
     public function index(SalleRepository $salleRepository): Response
     {
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $salles = $salleRepository->findAll();
+        }
+        else {
+            $member = $this->getUser()->membre;
+            $salles= $member->getSalles();
+        }
         return $this->render('salle/index.html.twig', [
-            'salles' => $salleRepository->findAll(),
+            'salles' => $salles,
         ]);
     }
 
@@ -31,7 +38,11 @@ class SalleController extends AbstractController
         options: ['id' => 'membre_id'],
     )]
     public function new(Request $request, SalleRepository $salleRepository,Membre $membre): Response
-    {
+    {$membreUser =$this->getUser();
+        $hasAccess = $this->isGranted('ROLE_ADMIN') || ($membreUser== $membre);
+        if(! $hasAccess) {
+            throw $this->createAccessDeniedException("You cannot access another member's salle!");
+                    }
         $salle = new Salle();
         $salle->setProprietaire($membre);
         $form = $this->createForm(SalleType::class, $salle);
@@ -51,7 +62,11 @@ class SalleController extends AbstractController
 
     #[Route('/{id}', name: 'app_salle_show', methods: ['GET'])]
     public function show(Salle $salle): Response
-    {
+    {$membreUser =$this->getUser();
+        $hasAccess = $this->isGranted('ROLE_ADMIN') || ($membreUser== $salle->getProprietaire()->getUser());
+        if(! $hasAccess) {
+            throw $this->createAccessDeniedException("You cannot access another member's salle!");
+                    }
         return $this->render('salle/show.html.twig', [
             'salle' => $salle,
         ]);
@@ -59,7 +74,11 @@ class SalleController extends AbstractController
     #[IsGranted('ROLE_USER')]
     #[Route('/{id}/edit', name: 'app_salle_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Salle $salle, SalleRepository $salleRepository): Response
-    {
+    {$membreUser =$this->getUser();
+        $hasAccess = $this->isGranted('ROLE_ADMIN') || ($membreUser== $salle->getProprietaire()->getUser());
+        if(! $hasAccess) {
+            throw $this->createAccessDeniedException("You cannot access another member's salle!");
+                    }
         $form = $this->createForm(SalleType::class, $salle);
         $form->handleRequest($request);
 
@@ -77,7 +96,11 @@ class SalleController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'app_salle_delete', methods: ['POST'])]
     public function delete(Request $request, Salle $salle, SalleRepository $salleRepository): Response
-    {
+    {$membreUser =$this->getUser();
+        $hasAccess = $this->isGranted('ROLE_ADMIN') || ($membreUser== $salle->getProprietaire()->getUser());
+        if(! $hasAccess) {
+            throw $this->createAccessDeniedException("You cannot access another member's salle!");
+                    }
         if ($this->isCsrfTokenValid('delete'.$salle->getId(), $request->request->get('_token'))) {
             $salleRepository->remove($salle, true);
         }
